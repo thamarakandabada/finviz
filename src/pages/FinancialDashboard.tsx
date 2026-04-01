@@ -2,11 +2,10 @@ import { useState, useCallback, useMemo } from "react";
 import { useAuth } from "@/components/AuthProvider";
 import { supabase } from "@/integrations/supabase/client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { useNavigate } from "react-router-dom";
 import {
-  ArrowLeft, Upload, Trash2, TrendingUp, TrendingDown, DollarSign,
+  Upload, Trash2, TrendingUp, TrendingDown, DollarSign,
   PieChart, ArrowUpRight, ArrowDownRight, Minus, Calendar, FileText,
-  Database, ChevronDown, ChevronUp,
+  Database, ChevronDown, ChevronUp, LogOut,
 } from "lucide-react";
 import FinancialReport from "@/components/FinancialReport";
 import { Button } from "@/components/ui/button";
@@ -157,8 +156,7 @@ function toPieData(map: Record<string, number>) {
 
 // ─── component ───
 export default function FinancialDashboard() {
-  const { session } = useAuth();
-  const navigate = useNavigate();
+  const { session, signOut } = useAuth();
   const queryClient = useQueryClient();
   const [uploading, setUploading] = useState(false);
   const [selectedMonth, setSelectedMonth] = useState<string>("all");
@@ -505,9 +503,6 @@ export default function FinancialDashboard() {
         {/* Header */}
         <div className="flex items-center justify-between flex-wrap gap-3">
           <div className="flex items-center gap-3">
-            <Button variant="ghost" size="icon" onClick={() => navigate("/")}>
-              <ArrowLeft className="h-4 w-4" />
-            </Button>
             <h1 className="text-xl font-semibold text-foreground">Financial Dashboard</h1>
           </div>
           <div className="flex items-center gap-2">
@@ -533,6 +528,9 @@ export default function FinancialDashboard() {
               <Database className="h-3.5 w-3.5 mr-1.5" />
               Manage Data
               {showDataManager ? <ChevronUp className="h-3 w-3 ml-1" /> : <ChevronDown className="h-3 w-3 ml-1" />}
+            </Button>
+            <Button variant="ghost" size="sm" onClick={signOut} className="text-muted-foreground hover:text-foreground">
+              <LogOut className="h-3.5 w-3.5" />
             </Button>
           </div>
         </div>
