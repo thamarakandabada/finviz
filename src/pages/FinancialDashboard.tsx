@@ -156,8 +156,7 @@ function toPieData(map: Record<string, number>) {
 
 // ─── component ───
 export default function FinancialDashboard() {
-  const { session } = useAuth();
-  const navigate = useNavigate();
+  const { session, signOut } = useAuth();
   const queryClient = useQueryClient();
   const [uploading, setUploading] = useState(false);
   const [selectedMonth, setSelectedMonth] = useState<string>("all");
