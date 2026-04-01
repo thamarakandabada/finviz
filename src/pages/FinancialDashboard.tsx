@@ -2,7 +2,7 @@ import { useState, useCallback, useMemo } from "react";
 import { useAuth } from "@/components/AuthProvider";
 import { supabase } from "@/integrations/supabase/client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { useNavigate } from "react-router-dom";
+import { LogOut } from "lucide-react";
 import {
   ArrowLeft, Upload, Trash2, TrendingUp, TrendingDown, DollarSign,
   PieChart, ArrowUpRight, ArrowDownRight, Minus, Calendar, FileText,
