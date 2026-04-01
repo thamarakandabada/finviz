@@ -2,11 +2,10 @@ import { useState, useCallback, useMemo } from "react";
 import { useAuth } from "@/components/AuthProvider";
 import { supabase } from "@/integrations/supabase/client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { LogOut } from "lucide-react";
 import {
-  ArrowLeft, Upload, Trash2, TrendingUp, TrendingDown, DollarSign,
+  Upload, Trash2, TrendingUp, TrendingDown, DollarSign,
   PieChart, ArrowUpRight, ArrowDownRight, Minus, Calendar, FileText,
-  Database, ChevronDown, ChevronUp,
+  Database, ChevronDown, ChevronUp, LogOut,
 } from "lucide-react";
 import FinancialReport from "@/components/FinancialReport";
 import { Button } from "@/components/ui/button";
