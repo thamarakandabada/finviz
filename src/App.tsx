@@ -4,10 +4,6 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider, useAuth } from "@/components/AuthProvider";
-import Index from "./pages/Index";
-import DebtAllocator from "./pages/DebtAllocator";
-import Trends from "./pages/Trends";
-import LinkRotWatchdog from "./pages/LinkRotWatchdog";
 import FinancialDashboard from "./pages/FinancialDashboard";
 import { LoginPage } from "./pages/Login";
 import NotFound from "./pages/NotFound";
@@ -43,11 +39,7 @@ const App = () => (
         <BrowserRouter>
           <Routes>
             <Route path="/login" element={<PublicRoute><LoginPage /></PublicRoute>} />
-            <Route path="/" element={<ProtectedRoute><Index /></ProtectedRoute>} />
-            <Route path="/debt-allocator" element={<ProtectedRoute><DebtAllocator /></ProtectedRoute>} />
-            <Route path="/trends" element={<ProtectedRoute><Trends /></ProtectedRoute>} />
-            <Route path="/link-rot" element={<ProtectedRoute><LinkRotWatchdog /></ProtectedRoute>} />
-            <Route path="/finances" element={<ProtectedRoute><FinancialDashboard /></ProtectedRoute>} />
+            <Route path="/" element={<ProtectedRoute><FinancialDashboard /></ProtectedRoute>} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
