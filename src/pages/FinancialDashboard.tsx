@@ -504,6 +504,7 @@ export default function FinancialDashboard() {
         <div className="flex items-center justify-between flex-wrap gap-3">
           <div className="flex items-center gap-3">
             <h1 className="text-xl font-semibold text-foreground">Financial Dashboard</h1>
+          </div>
           <div className="flex items-center gap-2">
             {allMonths.length > 0 && (
               <Select value={selectedMonth} onValueChange={setSelectedMonth}>
