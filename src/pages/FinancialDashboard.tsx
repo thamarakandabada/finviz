@@ -529,6 +529,9 @@ export default function FinancialDashboard() {
               Manage Data
               {showDataManager ? <ChevronUp className="h-3 w-3 ml-1" /> : <ChevronDown className="h-3 w-3 ml-1" />}
             </Button>
+            <Button variant="ghost" size="sm" onClick={signOut} className="text-muted-foreground hover:text-foreground">
+              <LogOut className="h-3.5 w-3.5" />
+            </Button>
           </div>
         </div>
 
