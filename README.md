@@ -1,73 +1,126 @@
-# Welcome to your Lovable project
+# FinViz — Personal Finance Data Visualiser
 
-## Project info
+A self-hosted financial dashboard that turns CSV exports from double-entry
+bookkeeping apps (like Finances 2) into interactive visualisations.
 
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
+> **Disclaimer:** This tool is for data visualisation only and does not
+> constitute financial advice.
 
-## How can I edit this code?
+## Features
 
-There are several ways of editing your application.
+- 📊 **Net worth tracking** — assets, liabilities, and trends over time
+- 📈 **Income vs expenses** — monthly bar charts with MoM deltas
+- 🥧 **Category breakdowns** — Sankey diagrams for spending and income
+- 💰 **Savings rate** — trend line with automatic calculation
+- 🔮 **Expense forecasting** — weighted moving average predictions
+- ⏳ **Life runway** — how long your liquid assets last at current burn
+- 📄 **Reports** — printable year-end, 6-month, and 12-month summaries
+- 🔐 **Secure** — RLS-protected, IP rate-limiting, per-user data isolation
 
-**Use Lovable**
+## Quick Start (Self-Hosted)
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
+### Prerequisites
 
-Changes made via Lovable will be committed automatically to this repo.
+- [Docker](https://docs.docker.com/get-docker/) & Docker Compose
+- [Node.js 20+](https://nodejs.org/) (for local development only)
 
-**Use your preferred IDE**
+### 1. Clone & configure
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
-
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
+```bash
+git clone <repo-url> && cd finviz
+cp .env.example .env
+# Edit .env — set passwords, JWT secret, and Supabase keys
 ```
 
-**Edit a file directly in GitHub**
+### 2. Start the stack
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+```bash
+docker compose up -d
+```
 
-**Use GitHub Codespaces**
+This starts Postgres, Supabase Auth, PostgREST, and the FinViz app.
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+### 3. Create your first user
 
-## What technologies are used for this project?
+```bash
+chmod +x setup/create-user.sh
+./setup/create-user.sh you@example.com yourpassword
+```
 
-This project is built with:
+### 4. Open the app
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+Visit [http://localhost:3000](http://localhost:3000) and sign in.
 
-## How can I deploy this project?
+## Configuration
 
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
+All configuration lives in `src/lib/app-config.ts` and can be overridden
+via environment variables:
 
-## Can I connect a custom domain to my Lovable project?
+| Variable | Default | Description |
+| --- | --- | --- |
+| `VITE_CURRENCY_CODE` | `GBP` | ISO 4217 currency code |
+| `VITE_LOCALE` | `en-GB` | BCP 47 locale for number formatting |
 
-Yes, you can!
+### CSV Column Mapping
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+The default column map matches **Finances 2** CSV exports. If your app uses
+a different column layout, edit the `CSV_COLUMNS` object in
+`src/lib/app-config.ts`:
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+```ts
+export const CSV_COLUMNS: CSVColumnMap = {
+  date: 0,          // Column index for transaction date
+  account: 1,       // Account name
+  amount: 2,        // Transaction amount
+  currency: 3,      // Currency code
+  category: 4,      // Category (supports hierarchical "Parent:Child")
+  counterAccount: 5, // Counter-account for transfers
+  note: 6,          // Transaction note/memo
+  payee: 7,         // Payee name
+  cleared: 9,       // Cleared status column
+  minColumns: 10,   // Minimum columns for a valid row
+  clearedValue: "*", // Value that means "cleared"
+};
+```
+
+## Tech Stack
+
+- **Frontend:** React 18, TypeScript, Vite, Tailwind CSS, shadcn/ui, Recharts
+- **Backend:** Supabase (Postgres + Auth + REST API)
+- **Deployment:** Docker Compose or any static host + Supabase
+
+## Development
+
+```bash
+npm install
+npm run dev        # Start dev server on :5173
+npm run build      # Production build
+npm run test       # Run tests
+```
+
+## Project Structure
+
+```
+src/
+├── lib/
+│   ├── app-config.ts    # Currency, locale, CSV column mapping
+│   └── csv-parser.ts    # CSV parsing & account classification
+├── components/
+│   ├── AuthProvider.tsx  # Auth context
+│   └── FinancialReport.tsx  # Printable reports
+├── pages/
+│   ├── FinancialDashboard.tsx  # Main dashboard
+│   └── Login.tsx        # Login page
+setup/
+├── schema.sql           # Database schema
+├── create-user.sh       # User creation script
+└── nginx.conf           # Production nginx config
+```
+
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md).
+
+## License
+
+[MIT](LICENSE)
