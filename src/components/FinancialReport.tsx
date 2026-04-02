@@ -21,14 +21,6 @@ type DbTx = {
   created_at: string;
 };
 
-const fmt = (n: number) =>
-  new Intl.NumberFormat("en-GB", { style: "currency", currency: "GBP" }).format(n);
-
-const fmtMonth = (m: string) => {
-  const [y, mo] = m.split("-");
-  const names = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-  return `${names[parseInt(mo) - 1]} ${y}`;
-};
 
 function normTx(t: DbTx) {
   return { ...t, counterAccount: t.counter_account || "", category: t.category || "" };
