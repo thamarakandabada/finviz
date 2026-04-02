@@ -25,6 +25,7 @@ import {
   topCategory,
   type RawTransaction,
 } from "@/lib/csv-parser";
+import { fmt, fmtMonth } from "@/lib/app-config";
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
   AreaChart, Area, Legend, Sankey, Rectangle,
@@ -66,14 +67,6 @@ type DbTx = {
   created_at: string;
 };
 
-const fmt = (n: number) =>
-  new Intl.NumberFormat("en-GB", { style: "currency", currency: "GBP" }).format(n);
-
-const fmtMonth = (m: string) => {
-  const [y, mo] = m.split("-");
-  const names = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-  return `${names[parseInt(mo) - 1]} ${y}`;
-};
 
 // ─── helpers ───
 function normTx(t: DbTx) {
