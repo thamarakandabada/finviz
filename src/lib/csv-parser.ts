@@ -1,3 +1,5 @@
+import { CSV_COLUMNS, type CSVColumnMap } from "./app-config";
+
 export interface RawTransaction {
   date: string;
   account: string;
@@ -10,7 +12,7 @@ export interface RawTransaction {
   cleared: boolean;
 }
 
-export function parseFinanceCSV(csvText: string): RawTransaction[] {
+export function parseFinanceCSV(csvText: string, map: CSVColumnMap = CSV_COLUMNS): RawTransaction[] {
   const lines = csvText.trim().split("\n");
   if (lines.length < 2) return [];
 
@@ -18,18 +20,18 @@ export function parseFinanceCSV(csvText: string): RawTransaction[] {
 
   for (let i = 1; i < lines.length; i++) {
     const fields = parseCSVLine(lines[i]);
-    if (fields.length < 10) continue;
+    if (fields.length < map.minColumns) continue;
 
     rows.push({
-      date: fields[0],
-      account: fields[1],
-      amount: parseFloat(fields[2]) || 0,
-      currency: fields[3] || "GBP",
-      category: fields[4],
-      counterAccount: fields[5],
-      note: fields[6],
-      payee: fields[7],
-      cleared: fields[9]?.trim() === "*",
+      date: fields[map.date],
+      account: fields[map.account],
+      amount: parseFloat(fields[map.amount]) || 0,
+      currency: fields[map.currency] || "GBP",
+      category: fields[map.category],
+      counterAccount: fields[map.counterAccount],
+      note: fields[map.note],
+      payee: fields[map.payee],
+      cleared: fields[map.cleared]?.trim() === map.clearedValue,
     });
   }
 
