@@ -25,6 +25,7 @@ import {
   topCategory,
   type RawTransaction,
 } from "@/lib/csv-parser";
+import { fmt, fmtMonth } from "@/lib/app-config";
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
   AreaChart, Area, Legend, Sankey, Rectangle,
