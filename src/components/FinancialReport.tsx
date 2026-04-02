@@ -1,5 +1,6 @@
 import { useMemo, useRef } from "react";
 import { classifyAccount, isTransfer, isOpeningBalance, isIlliquidIncome, topCategory } from "@/lib/csv-parser";
+import { fmt, fmtMonth } from "@/lib/app-config";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Printer } from "lucide-react";
