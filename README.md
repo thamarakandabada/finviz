@@ -120,6 +120,54 @@ setup/
 └── nginx.conf           # Production nginx config
 ```
 
+## Security & Authentication
+
+FinViz is designed as a **single-user / private-instance** tool. Each
+deployment has its own database and authentication — there is no shared
+multi-tenant service.
+
+### How login works
+
+Login is handled by a Supabase Edge Function (`supabase/functions/login/`)
+that sits in front of `supabase.auth.signInWithEmailAndPassword`. It adds:
+
+1. **IP rate-limiting** — after 3 failed attempts from the same IP in 15
+   minutes the IP is banned (stored in `banned_ips`).
+2. **Attempt logging** — every login attempt is recorded in
+   `login_attempts` for audit.
+3. **Row-Level Security** — all data tables use RLS policies scoped to
+   `auth.uid()`, so users can only access their own data.
+
+### Securing your self-hosted instance
+
+| Layer | Recommendation |
+| --- | --- |
+| **Transport** | Always serve behind HTTPS (e.g. Caddy, nginx + Let's Encrypt, Cloudflare Tunnel). The included `setup/nginx.conf` is a starting point. |
+| **JWT secret** | Generate a strong random secret (`openssl rand -base64 32`) and set it in `.env`. Never reuse across environments. |
+| **Supabase keys** | The `anon` key is safe to expose to the browser. The `service_role` key must **never** be exposed — it bypasses RLS. Keep it in server-side env only. |
+| **User creation** | Users are created via CLI (`setup/create-user.sh`), not self-registration. There is no public signup endpoint. |
+| **Network** | For maximum security, restrict access to your instance via VPN, Tailscale, or Cloudflare Access. |
+| **Updates** | Pin your Docker image versions and regularly pull security patches. |
+
+### Running as a public demo
+
+If you want to host a public demo (read-only, sample data):
+
+1. Create a dedicated demo user via `setup/create-user.sh`.
+2. Load sample data into that user's account.
+3. Set these environment variables at build time:
+
+   ```env
+   VITE_DEMO_MODE=true
+   VITE_DEMO_EMAIL=demo@example.com
+   VITE_DEMO_PASSWORD=demopassword
+   ```
+
+4. The login page will show a **Demo Mode** banner with pre-filled
+   credentials and a link to self-host.
+5. Optionally, create a database trigger or policy to prevent writes
+   for the demo user, making the experience truly read-only.
+
 ## Contributing
 
 See [CONTRIBUTING.md](CONTRIBUTING.md).
