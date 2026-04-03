@@ -60,6 +60,9 @@ via environment variables:
 | --- | --- | --- |
 | `VITE_CURRENCY_CODE` | `GBP` | ISO 4217 currency code |
 | `VITE_LOCALE` | `en-GB` | BCP 47 locale for number formatting |
+| `VITE_DEMO_MODE` | `false` | Show demo banner & pre-fill credentials |
+| `VITE_DEMO_EMAIL` | *(empty)* | Email pre-filled in demo mode |
+| `VITE_DEMO_PASSWORD` | *(empty)* | Password pre-filled in demo mode |
 
 ### CSV Column Mapping
 
