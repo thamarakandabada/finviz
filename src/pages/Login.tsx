@@ -44,7 +44,7 @@ export function LoginPage() {
     <div className="min-h-screen bg-background flex items-center justify-center px-4">
       <form onSubmit={handleSubmit} className="w-full max-w-sm space-y-6">
         <div className="flex justify-center">
-          <img src={logo} alt="Finviz" className="h-16" />
+          <img src="8a8b2751-2d09-4b17-bc6a-d5272e035c5d.png" alt="Finviz" className="h-16" />
         </div>
         <div className="space-y-1.5">
           <Label htmlFor="email" className="text-xs font-medium text-muted-foreground">
