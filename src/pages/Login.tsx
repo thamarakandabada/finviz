@@ -5,6 +5,7 @@ import { Label } from "@/components/ui/label";
 import { Lock, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
+import logo from "@/assets/finnviz_logo.png";
 
 export function LoginPage() {
   const [email, setEmail] = useState("");
@@ -41,7 +42,10 @@ export function LoginPage() {
 
   return (
     <div className="min-h-screen bg-background flex items-center justify-center px-4">
-      <form onSubmit={handleSubmit} className="w-full max-w-sm space-y-4">
+      <form onSubmit={handleSubmit} className="w-full max-w-sm space-y-6">
+        <div className="flex justify-center">
+          <img src={logo} alt="Finviz" className="h-10" />
+        </div>
         <div className="space-y-1.5">
           <Label htmlFor="email" className="text-xs font-medium text-muted-foreground">
             Email
