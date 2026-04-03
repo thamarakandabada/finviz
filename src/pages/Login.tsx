@@ -5,6 +5,7 @@ import { Label } from "@/components/ui/label";
 import { Lock, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
+import logo from "@/assets/finnviz_logo.png";
 
 export function LoginPage() {
   const [email, setEmail] = useState("");
