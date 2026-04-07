@@ -7,8 +7,6 @@ import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { DEMO_MODE, DEMO_EMAIL, DEMO_PASSWORD } from "@/lib/app-config";
 import { AppFooter } from "@/components/AppFooter";
-import { toast } from "sonner";
-import { DEMO_MODE, DEMO_EMAIL, DEMO_PASSWORD } from "@/lib/app-config";
 
 export function LoginPage() {
   const [email, setEmail] = useState(DEMO_MODE ? DEMO_EMAIL : "");
