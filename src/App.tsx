@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider, useAuth } from "@/components/AuthProvider";
 import FinancialDashboard from "./pages/FinancialDashboard";
 import { LoginPage } from "./pages/Login";
+import Colophon from "./pages/Colophon";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -39,6 +40,7 @@ const App = () => (
         <BrowserRouter>
           <Routes>
             <Route path="/login" element={<PublicRoute><LoginPage /></PublicRoute>} />
+            <Route path="/colophon" element={<Colophon />} />
             <Route path="/" element={<ProtectedRoute><FinancialDashboard /></ProtectedRoute>} />
             <Route path="*" element={<NotFound />} />
           </Routes>
