@@ -8,6 +8,7 @@ import {
   Database, ChevronDown, ChevronUp, LogOut,
 } from "lucide-react";
 import FinancialReport from "@/components/FinancialReport";
+import { AppFooter } from "@/components/AppFooter";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";

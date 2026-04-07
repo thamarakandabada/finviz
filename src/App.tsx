@@ -40,6 +40,7 @@ const App = () => (
         <BrowserRouter>
           <Routes>
             <Route path="/login" element={<PublicRoute><LoginPage /></PublicRoute>} />
+            <Route path="/colophon" element={<Colophon />} />
             <Route path="/" element={<ProtectedRoute><FinancialDashboard /></ProtectedRoute>} />
             <Route path="*" element={<NotFound />} />
           </Routes>
