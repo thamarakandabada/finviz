@@ -32,44 +32,6 @@ export type Database = {
         }
         Relationships: []
       }
-      broken_links: {
-        Row: {
-          broken_url: string
-          created_at: string
-          id: string
-          resolved: boolean
-          scan_id: string
-          source_page: string
-          status_code: number | null
-        }
-        Insert: {
-          broken_url: string
-          created_at?: string
-          id?: string
-          resolved?: boolean
-          scan_id: string
-          source_page: string
-          status_code?: number | null
-        }
-        Update: {
-          broken_url?: string
-          created_at?: string
-          id?: string
-          resolved?: boolean
-          scan_id?: string
-          source_page?: string
-          status_code?: number | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "broken_links_scan_id_fkey"
-            columns: ["scan_id"]
-            isOneToOne: false
-            referencedRelation: "link_scans"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
       credit_cards: {
         Row: {
           apr: number
@@ -141,51 +103,6 @@ export type Database = {
           note?: string | null
           payee?: string | null
           upload_month?: string
-          user_id?: string
-        }
-        Relationships: []
-      }
-      link_scans: {
-        Row: {
-          broken_count: number
-          completed_at: string | null
-          created_at: string
-          discovered_pages: Json | null
-          id: string
-          links_checked: number
-          pages_crawled: number
-          pages_processed: number
-          started_at: string
-          status: string
-          target_url: string
-          user_id: string
-        }
-        Insert: {
-          broken_count?: number
-          completed_at?: string | null
-          created_at?: string
-          discovered_pages?: Json | null
-          id?: string
-          links_checked?: number
-          pages_crawled?: number
-          pages_processed?: number
-          started_at?: string
-          status?: string
-          target_url: string
-          user_id: string
-        }
-        Update: {
-          broken_count?: number
-          completed_at?: string | null
-          created_at?: string
-          discovered_pages?: Json | null
-          id?: string
-          links_checked?: number
-          pages_crawled?: number
-          pages_processed?: number
-          started_at?: string
-          status?: string
-          target_url?: string
           user_id?: string
         }
         Relationships: []

@@ -149,6 +149,19 @@ that sits in front of `supabase.auth.signInWithEmailAndPassword`. It adds:
 | **Network** | For maximum security, restrict access to your instance via VPN, Tailscale, or Cloudflare Access. |
 | **Updates** | Pin your Docker image versions and regularly pull security patches. |
 
+### ⚠️ `VITE_` environment variables are public
+
+Vite inlines any variable prefixed with `VITE_` into the JavaScript bundle
+at build time. This means values like `VITE_DEMO_EMAIL` and
+`VITE_DEMO_PASSWORD` are **visible to anyone** who inspects the built
+assets. This is intentional for demo mode, but:
+
+- **Never** put real credentials in `VITE_` variables.
+- **Never** set `VITE_DEMO_PASSWORD` to a password you use elsewhere.
+- Server-side secrets (JWT secret, `SERVICE_ROLE_KEY`) must **only** be set
+  in the Docker environment or Supabase Edge Function secrets — they are
+  never exposed to the browser.
+
 ### Running as a public demo
 
 If you want to host a public demo (read-only, sample data):
