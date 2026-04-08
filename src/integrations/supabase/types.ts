@@ -32,33 +32,6 @@ export type Database = {
         }
         Relationships: []
       }
-      credit_cards: {
-        Row: {
-          apr: number
-          created_at: string
-          credit_limit: number
-          id: string
-          name: string
-          user_id: string
-        }
-        Insert: {
-          apr: number
-          created_at?: string
-          credit_limit?: number
-          id?: string
-          name: string
-          user_id: string
-        }
-        Update: {
-          apr?: number
-          created_at?: string
-          credit_limit?: number
-          id?: string
-          name?: string
-          user_id?: string
-        }
-        Relationships: []
-      }
       financial_transactions: {
         Row: {
           account: string
@@ -125,33 +98,6 @@ export type Database = {
           id?: string
           ip_address?: string
           success?: boolean
-        }
-        Relationships: []
-      }
-      monthly_entries: {
-        Row: {
-          balances: Json
-          created_at: string
-          extra_payment: number
-          id: string
-          month: string
-          user_id: string
-        }
-        Insert: {
-          balances?: Json
-          created_at?: string
-          extra_payment?: number
-          id?: string
-          month: string
-          user_id: string
-        }
-        Update: {
-          balances?: Json
-          created_at?: string
-          extra_payment?: number
-          id?: string
-          month?: string
-          user_id?: string
         }
         Relationships: []
       }
