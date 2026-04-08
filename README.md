@@ -1,10 +1,33 @@
 # FinViz — Personal Finance Data Visualiser
 
 A self-hosted financial dashboard that turns CSV exports from double-entry
-bookkeeping apps (like Finances 2) into interactive visualisations.
+bookkeeping apps into interactive visualisations.
 
 > **Disclaimer:** This tool is for data visualisation only and does not
 > constitute financial advice.
+
+## ⚠️ Important: Double-Entry Bookkeeping Only
+
+FinViz is designed exclusively for **double-entry bookkeeping** data. It
+expects CSV exports where every transaction has both an account and a
+counter-account (the "from" and "to" sides of each entry).
+
+### What works
+
+- [Finances 2](https://hochsteger.com/finances/) (macOS/iOS) — default
+  column mapping matches out of the box
+- Any app that exports CSV with columns for: date, account, amount,
+  currency, category, counter-account, note, payee, and cleared status
+
+### What doesn't work
+
+- Bank statement CSVs (single-entry, no counter-account)
+- Mint / YNAB / Copilot exports (category-based, not double-entry)
+- Spreadsheets without a consistent column structure
+
+If your app uses double-entry bookkeeping but a different column order,
+you can remap the columns — see [CSV Column Mapping](#csv-column-mapping)
+below.
 
 ## Features
 
@@ -17,39 +40,81 @@ bookkeeping apps (like Finances 2) into interactive visualisations.
 - 📄 **Reports** — printable year-end, 6-month, and 12-month summaries
 - 🔐 **Secure** — RLS-protected, IP rate-limiting, per-user data isolation
 
-## Quick Start (Self-Hosted)
+## Self-Hosting Guide
+
+FinViz is designed to be self-hosted. Each deployment is a private,
+single-user instance — there is no shared multi-tenant service.
 
 ### Prerequisites
 
-- [Docker](https://docs.docker.com/get-docker/) & Docker Compose
-- [Node.js 20+](https://nodejs.org/) (for local development only)
+| Requirement | Notes |
+| --- | --- |
+| [Docker](https://docs.docker.com/get-docker/) & Docker Compose | Required for the full stack |
+| [Node.js 20+](https://nodejs.org/) | Only needed for local development |
+| A machine or VPS | Any Linux box, Raspberry Pi, or cloud VM works |
 
-### 1. Clone & configure
+### Step 1: Clone & configure
 
 ```bash
-git clone <repo-url> && cd finviz
+git clone https://github.com/thamarakandabada/finviz.git
+cd finviz
 cp .env.example .env
-# Edit .env — set passwords, JWT secret, and Supabase keys
 ```
 
-### 2. Start the stack
+Open `.env` and fill in the required values:
+
+| Variable | What to set |
+| --- | --- |
+| `POSTGRES_PASSWORD` | A strong random password for the database |
+| `JWT_SECRET` | Generate with `openssl rand -base64 32` |
+| `ANON_KEY` | Supabase anon key (see Supabase docs) |
+| `SERVICE_ROLE_KEY` | Supabase service-role key (**never expose this**) |
+
+> **Security note:** The `SERVICE_ROLE_KEY` bypasses all Row-Level Security.
+> It must only be used server-side (Edge Functions, CLI scripts) and never
+> exposed to the browser.
+
+### Step 2: Start the stack
 
 ```bash
 docker compose up -d
 ```
 
-This starts Postgres, Supabase Auth, PostgREST, and the FinViz app.
+This starts:
+- **PostgreSQL** — database with RLS policies
+- **Supabase Auth** — handles authentication
+- **PostgREST** — auto-generated REST API
+- **FinViz app** — the frontend on port 3000
 
-### 3. Create your first user
+### Step 3: Create your user
 
 ```bash
 chmod +x setup/create-user.sh
 ./setup/create-user.sh you@example.com yourpassword
 ```
 
-### 4. Open the app
+There is no public signup — users are created via CLI only.
+
+### Step 4: Open the app
 
 Visit [http://localhost:3000](http://localhost:3000) and sign in.
+
+### Step 5: Secure your instance
+
+| Layer | What to do |
+| --- | --- |
+| **HTTPS** | Put the app behind a reverse proxy with TLS (Caddy, nginx + Let's Encrypt, Cloudflare Tunnel). See `setup/nginx.conf` for a starting point. |
+| **Network** | Restrict access via VPN, Tailscale, or Cloudflare Access for maximum security. |
+| **Updates** | Pin Docker image versions and pull security patches regularly. |
+| **Backups** | Back up the `db-data` Docker volume regularly. |
+
+### Updating
+
+```bash
+git pull
+docker compose down
+docker compose up -d --build
+```
 
 ## Configuration
 
@@ -86,6 +151,44 @@ export const CSV_COLUMNS: CSVColumnMap = {
 };
 ```
 
+### Account Classification
+
+Accounts are automatically classified as **assets** or **liabilities**
+based on their name. Accounts containing "credit card", "loan", or
+"prepaid loan fees" are treated as liabilities; everything else is an
+asset. To customise this, edit `classifyAccount()` in
+`src/lib/csv-parser.ts`.
+
+## ⚠️ `VITE_` Environment Variables Are Public
+
+Vite inlines any variable prefixed with `VITE_` into the JavaScript bundle
+at build time. This means values like `VITE_DEMO_EMAIL` and
+`VITE_DEMO_PASSWORD` are **visible to anyone** who inspects the built
+assets. This is intentional for demo mode, but:
+
+- **Never** put real credentials in `VITE_` variables.
+- **Never** set `VITE_DEMO_PASSWORD` to a password you use elsewhere.
+- Server-side secrets (`JWT_SECRET`, `SERVICE_ROLE_KEY`) must **only** be
+  set in the Docker environment or Edge Function secrets — they are never
+  exposed to the browser.
+
+## Running as a Public Demo
+
+If you want to host a read-only public demo:
+
+1. Create a dedicated demo user via `setup/create-user.sh`.
+2. Load sample data into that user's account.
+3. Set these environment variables at build time:
+
+   ```env
+   VITE_DEMO_MODE=true
+   VITE_DEMO_EMAIL=demo@example.com
+   VITE_DEMO_PASSWORD=demopassword
+   ```
+
+4. The login page will show a **Demo Mode** banner with pre-filled
+   credentials and a link to self-host.
+
 ## Tech Stack
 
 - **Frontend:** React 18, TypeScript, Vite, Tailwind CSS, shadcn/ui, Recharts
@@ -109,77 +212,23 @@ src/
 │   ├── app-config.ts    # Currency, locale, CSV column mapping
 │   └── csv-parser.ts    # CSV parsing & account classification
 ├── components/
+│   ├── AppFooter.tsx     # Shared footer with GitHub & colophon links
 │   ├── AuthProvider.tsx  # Auth context
 │   └── FinancialReport.tsx  # Printable reports
 ├── pages/
 │   ├── FinancialDashboard.tsx  # Main dashboard
-│   └── Login.tsx        # Login page
+│   ├── Login.tsx         # Login page
+│   └── Colophon.tsx      # About/tech stack page
 setup/
-├── schema.sql           # Database schema
-├── create-user.sh       # User creation script
-└── nginx.conf           # Production nginx config
+├── schema.sql            # Database schema
+├── create-user.sh        # User creation script
+└── nginx.conf            # Production nginx config
 ```
 
-## Security & Authentication
+## Security
 
-FinViz is designed as a **single-user / private-instance** tool. Each
-deployment has its own database and authentication — there is no shared
-multi-tenant service.
-
-### How login works
-
-Login is handled by a Supabase Edge Function (`supabase/functions/login/`)
-that sits in front of `supabase.auth.signInWithEmailAndPassword`. It adds:
-
-1. **IP rate-limiting** — after 3 failed attempts from the same IP in 15
-   minutes the IP is banned (stored in `banned_ips`).
-2. **Attempt logging** — every login attempt is recorded in
-   `login_attempts` for audit.
-3. **Row-Level Security** — all data tables use RLS policies scoped to
-   `auth.uid()`, so users can only access their own data.
-
-### Securing your self-hosted instance
-
-| Layer | Recommendation |
-| --- | --- |
-| **Transport** | Always serve behind HTTPS (e.g. Caddy, nginx + Let's Encrypt, Cloudflare Tunnel). The included `setup/nginx.conf` is a starting point. |
-| **JWT secret** | Generate a strong random secret (`openssl rand -base64 32`) and set it in `.env`. Never reuse across environments. |
-| **Supabase keys** | The `anon` key is safe to expose to the browser. The `service_role` key must **never** be exposed — it bypasses RLS. Keep it in server-side env only. |
-| **User creation** | Users are created via CLI (`setup/create-user.sh`), not self-registration. There is no public signup endpoint. |
-| **Network** | For maximum security, restrict access to your instance via VPN, Tailscale, or Cloudflare Access. |
-| **Updates** | Pin your Docker image versions and regularly pull security patches. |
-
-### ⚠️ `VITE_` environment variables are public
-
-Vite inlines any variable prefixed with `VITE_` into the JavaScript bundle
-at build time. This means values like `VITE_DEMO_EMAIL` and
-`VITE_DEMO_PASSWORD` are **visible to anyone** who inspects the built
-assets. This is intentional for demo mode, but:
-
-- **Never** put real credentials in `VITE_` variables.
-- **Never** set `VITE_DEMO_PASSWORD` to a password you use elsewhere.
-- Server-side secrets (JWT secret, `SERVICE_ROLE_KEY`) must **only** be set
-  in the Docker environment or Supabase Edge Function secrets — they are
-  never exposed to the browser.
-
-### Running as a public demo
-
-If you want to host a public demo (read-only, sample data):
-
-1. Create a dedicated demo user via `setup/create-user.sh`.
-2. Load sample data into that user's account.
-3. Set these environment variables at build time:
-
-   ```env
-   VITE_DEMO_MODE=true
-   VITE_DEMO_EMAIL=demo@example.com
-   VITE_DEMO_PASSWORD=demopassword
-   ```
-
-4. The login page will show a **Demo Mode** banner with pre-filled
-   credentials and a link to self-host.
-5. Optionally, create a database trigger or policy to prevent writes
-   for the demo user, making the experience truly read-only.
+See [SECURITY.md](SECURITY.md) for the full security architecture,
+responsible disclosure policy, and hardening recommendations.
 
 ## Contributing
 
