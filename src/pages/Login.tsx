@@ -19,23 +19,16 @@ export function LoginPage() {
 
     setLoading(true);
     try {
-      const res = await supabase.functions.invoke("login", {
-        body: { email: email.trim(), password },
+      const { error } = await supabase.auth.signInWithPassword({
+        email: email.trim(),
+        password,
       });
 
-      if (res.error || !res.data?.session) {
-        const errorData = res.data;
-        if (errorData?.error === "banned") {
-          toast.error("Access denied.");
-        } else {
-          toast.error("Invalid credentials");
-        }
-        return;
+      if (error) {
+        toast.error("Invalid credentials");
       }
-
-      await supabase.auth.setSession(res.data.session);
     } catch {
-      toast.error("Invalid credentials");
+      toast.error("Something went wrong");
     } finally {
       setLoading(false);
     }
