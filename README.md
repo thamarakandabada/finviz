@@ -38,7 +38,7 @@ below.
 - 🔮 **Expense forecasting** — weighted moving average predictions
 - ⏳ **Life runway** — how long your liquid assets last at current burn
 - 📄 **Reports** — printable year-end, 6-month, and 12-month summaries
-- 🔐 **Secure** — RLS-protected, IP rate-limiting, per-user data isolation
+- 🔐 **Secure** — RLS-protected, per-user data isolation
 
 ## Self-Hosting Guide
 

@@ -14,24 +14,6 @@ export type Database = {
   }
   public: {
     Tables: {
-      banned_ips: {
-        Row: {
-          banned_at: string
-          id: string
-          ip_address: string
-        }
-        Insert: {
-          banned_at?: string
-          id?: string
-          ip_address: string
-        }
-        Update: {
-          banned_at?: string
-          id?: string
-          ip_address?: string
-        }
-        Relationships: []
-      }
       financial_transactions: {
         Row: {
           account: string
@@ -80,33 +62,12 @@ export type Database = {
         }
         Relationships: []
       }
-      login_attempts: {
-        Row: {
-          attempted_at: string
-          id: string
-          ip_address: string
-          success: boolean
-        }
-        Insert: {
-          attempted_at?: string
-          id?: string
-          ip_address: string
-          success?: boolean
-        }
-        Update: {
-          attempted_at?: string
-          id?: string
-          ip_address?: string
-          success?: boolean
-        }
-        Relationships: []
-      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      check_and_ban_ip: { Args: { p_ip: string }; Returns: boolean }
+      [_ in never]: never
     }
     Enums: {
       [_ in never]: never
