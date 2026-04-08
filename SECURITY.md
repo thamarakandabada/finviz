@@ -16,12 +16,7 @@ responsibly:
 
 ### Authentication
 
-- Login is handled by a Supabase Edge Function that wraps
-  `signInWithPassword` with additional protections.
-- **IP rate-limiting** — after 3 failed attempts from the same IP within
-  15 minutes, the IP is automatically banned.
-- **Audit logging** — every login attempt (success or failure) is recorded
-  in the `login_attempts` table.
+- Login uses Supabase Auth's `signInWithPassword` directly.
 - **No public signup** — users are created via CLI
   (`setup/create-user.sh`), not self-registration.
 
@@ -37,7 +32,7 @@ responsibly:
 | Secret | Exposure | Notes |
 | --- | --- | --- |
 | `ANON_KEY` | Client-side (safe) | Publishable by design; RLS enforces access |
-| `SERVICE_ROLE_KEY` | Server-side only | Bypasses RLS — keep in Docker env / Edge Function secrets |
+| `SERVICE_ROLE_KEY` | Server-side only | Bypasses RLS — keep in Docker env only |
 | `JWT_SECRET` | Server-side only | Used to sign auth tokens — generate with `openssl rand -base64 32` |
 | `VITE_*` variables | **Baked into JS bundle** | Visible to anyone inspecting the app — never put real credentials here |
 
