@@ -27,6 +27,18 @@ responsibly:
 - The `service_role` key bypasses RLS and must **never** be exposed to the
   browser or committed to source control.
 
+### Demo Mode Protection
+
+When running a public demo, the demo user account is marked as **read-only**
+at the database level:
+
+- A `demo_users` table tracks which user IDs are demo accounts.
+- RLS policies on `financial_transactions` allow demo users to **view** data
+  but block all **insert, update, and delete** operations.
+- This protection is enforced server-side via a `SECURITY DEFINER` function,
+  so it cannot be bypassed from the client.
+- To mark a user as demo, run `setup/mark-demo-user.sh <email>`.
+
 ### Secrets & Environment Variables
 
 | Secret | Exposure | Notes |
