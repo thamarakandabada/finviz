@@ -2,11 +2,10 @@ import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Lock, Mail, AlertTriangle } from "lucide-react";
+import { Lock, Mail, Github, Info } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { DEMO_MODE, DEMO_EMAIL, DEMO_PASSWORD } from "@/lib/app-config";
-import { AppFooter } from "@/components/AppFooter";
 
 export function LoginPage() {
   const [email, setEmail] = useState(DEMO_MODE ? DEMO_EMAIL : "");
@@ -35,28 +34,47 @@ export function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-background flex flex-col">
-      <div className="flex-1 flex items-center justify-center px-4">
-        <form onSubmit={handleSubmit} className="w-full max-w-sm space-y-6">
-          {DEMO_MODE && (
-            <div className="rounded-lg border border-yellow-500/30 bg-yellow-500/10 p-4 text-sm text-yellow-200 flex items-start gap-3">
-              <AlertTriangle className="h-5 w-5 shrink-0 text-yellow-400 mt-0.5" />
-              <div>
-                <p className="font-semibold text-yellow-300">Demo Mode</p>
-                <p className="mt-1 leading-relaxed">
-                  This is a read-only demo with sample data. To use FinViz with your own data,{" "}
+    <div className="min-h-screen bg-background flex items-center justify-center px-4">
+      <div className="w-full max-w-sm space-y-6">
+        {DEMO_MODE && (
+          <div className="rounded-lg border border-border bg-card p-5 space-y-4">
+            <div className="flex items-start gap-3">
+              <Info className="h-5 w-5 shrink-0 text-primary mt-0.5" />
+              <div className="space-y-3 text-sm text-muted-foreground leading-relaxed">
+                <p>
+                  <span className="font-semibold text-foreground">Welcome to the FinViz demo.</span>{" "}
+                  This is a read-only instance loaded with sample financial data so you can explore the dashboard without signing up.
+                </p>
+                <p>
+                  Sign in with <span className="font-mono text-xs bg-muted px-1.5 py-0.5 rounded text-foreground">{DEMO_EMAIL}</span>{" "}
+                  / <span className="font-mono text-xs bg-muted px-1.5 py-0.5 rounded text-foreground">{DEMO_PASSWORD}</span> — the credentials are pre-filled below.
+                </p>
+                <p>
+                  Want to use FinViz with your own data?{" "}
                   <a
                     href="https://github.com/thamarakandabada/finviz"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="underline text-yellow-300 hover:text-yellow-100"
+                    className="inline-flex items-center gap-1 text-primary hover:underline"
                   >
-                    self-host your own instance
-                  </a>.
+                    <Github className="h-3.5 w-3.5" />
+                    Self-host from GitHub
+                  </a>{" "}
+                  or read the{" "}
+                  <a
+                    href="/colophon"
+                    className="text-primary hover:underline"
+                  >
+                    Colophon
+                  </a>{" "}
+                  for more about the project.
                 </p>
               </div>
             </div>
-          )}
+          </div>
+        )}
+
+        <form onSubmit={handleSubmit} className="space-y-5">
           <div className="space-y-1.5">
             <Label htmlFor="email" className="text-xs font-medium text-muted-foreground">
               Email
@@ -95,7 +113,6 @@ export function LoginPage() {
           </Button>
         </form>
       </div>
-      <AppFooter />
     </div>
   );
 }
