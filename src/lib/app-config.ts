@@ -6,11 +6,11 @@
  */
 
 // ─── Demo Mode ───
-// Set VITE_DEMO_MODE=true to show a demo banner on the login page.
-// Demo credentials can be configured via VITE_DEMO_EMAIL / VITE_DEMO_PASSWORD.
-export const DEMO_MODE = import.meta.env.VITE_DEMO_MODE === "true";
-export const DEMO_EMAIL = import.meta.env.VITE_DEMO_EMAIL ?? "";
-export const DEMO_PASSWORD = import.meta.env.VITE_DEMO_PASSWORD ?? "";
+// Set VITE_DEMO_MODE=true to show a demo banner on the login page,
+// or leave the defaults below for the hosted demo.
+export const DEMO_MODE = (import.meta.env.VITE_DEMO_MODE ?? "true") === "true";
+export const DEMO_EMAIL = import.meta.env.VITE_DEMO_EMAIL ?? "test@test.com";
+export const DEMO_PASSWORD = import.meta.env.VITE_DEMO_PASSWORD ?? "test1234";
 
 // ─── Currency & Locale ───
 export const CURRENCY_CODE = import.meta.env.VITE_CURRENCY_CODE ?? "GBP";
