@@ -47,18 +47,18 @@ CREATE POLICY "Users can view own transactions"
   TO authenticated
   USING (auth.uid() = user_id);
 
-CREATE POLICY "Non-demo users can insert own transactions"
+CREATE POLICY "Users can insert own transactions"
   ON public.financial_transactions FOR INSERT
   TO authenticated
-  WITH CHECK (auth.uid() = user_id AND NOT public.is_demo_user(auth.uid()));
+  WITH CHECK (auth.uid() = user_id);
 
-CREATE POLICY "Non-demo users can update own transactions"
+CREATE POLICY "Users can update own transactions"
   ON public.financial_transactions FOR UPDATE
   TO authenticated
-  USING (auth.uid() = user_id AND NOT public.is_demo_user(auth.uid()))
-  WITH CHECK (auth.uid() = user_id AND NOT public.is_demo_user(auth.uid()));
+  USING (auth.uid() = user_id)
+  WITH CHECK (auth.uid() = user_id);
 
-CREATE POLICY "Non-demo users can delete own transactions"
+CREATE POLICY "Users can delete own transactions"
   ON public.financial_transactions FOR DELETE
   TO authenticated
-  USING (auth.uid() = user_id AND NOT public.is_demo_user(auth.uid()));
+  USING (auth.uid() = user_id);
