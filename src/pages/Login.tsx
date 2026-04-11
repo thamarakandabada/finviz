@@ -43,7 +43,7 @@ export function LoginPage() {
               <div className="space-y-3 text-sm text-muted-foreground leading-relaxed">
                 <p>
                   <span className="font-semibold text-foreground">Welcome to the FinViz demo.</span>{" "}
-                  This is a read-only instance loaded with sample financial data so you can explore the dashboard without signing up.
+                  This instance is loaded with sample financial data so you can explore the full dashboard — upload, delete, and play around freely. Data resets automatically every hour.
                 </p>
                 <p>
                   Sign in with <span className="font-mono text-xs bg-muted px-1.5 py-0.5 rounded text-foreground">{DEMO_EMAIL}</span>{" "}
