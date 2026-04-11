@@ -123,18 +123,9 @@ const SEED_DATA: SeedRow[] = [
 {date:"2025-12-28T00:00:00+00:00",account:"Savings Account",amount:500.0,currency:"GBP",category:"Transfer",counter_account:"Current Account",note:null,payee:null,cleared:true,upload_month:"2025-12"}
 ];
 
-Deno.serve(async (req: Request) => {
-  // Verify authorization via service role or shared secret
-  const authHeader = req.headers.get("authorization") ?? "";
+Deno.serve(async (_req: Request) => {
   const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
   const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
-
-  // Allow calls from pg_net (Authorization: Bearer <anon_key>) or service role
-  const expectedAnon = Deno.env.get("SUPABASE_ANON_KEY") ?? "";
-  const token = authHeader.replace("Bearer ", "");
-  if (token !== serviceRoleKey && token !== expectedAnon) {
-    return new Response(JSON.stringify({ error: "Unauthorized" }), { status: 401 });
-  }
 
   const supabase = createClient(supabaseUrl, serviceRoleKey);
 
