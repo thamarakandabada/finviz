@@ -129,7 +129,24 @@ Deno.serve(async (_req: Request) => {
 
   const supabase = createClient(supabaseUrl, serviceRoleKey);
 
-  // 1. Delete all existing transactions for the demo user
+  // 1. Check if data needs resetting (skip if all 105 seed rows are present)
+  const { count, error: countError } = await supabase
+    .from("financial_transactions")
+    .select("*", { count: "exact", head: true })
+    .eq("user_id", DEMO_USER_ID);
+
+  if (countError) {
+    return new Response(JSON.stringify({ error: countError.message }), { status: 500 });
+  }
+
+  if (count === SEED_DATA.length) {
+    return new Response(
+      JSON.stringify({ ok: true, skipped: true, reason: "data unchanged", rows: count }),
+      { headers: { "Content-Type": "application/json" } }
+    );
+  }
+
+  // 2. Delete all existing transactions for the demo user
   const { error: delError } = await supabase
     .from("financial_transactions")
     .delete()
@@ -139,7 +156,7 @@ Deno.serve(async (_req: Request) => {
     return new Response(JSON.stringify({ error: delError.message }), { status: 500 });
   }
 
-  // 2. Re-insert seed data in batches
+  // 3. Re-insert seed data in batches
   const rows = SEED_DATA.map((r) => ({ ...r, user_id: DEMO_USER_ID }));
   let inserted = 0;
   for (let i = 0; i < rows.length; i += 50) {

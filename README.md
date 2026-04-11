@@ -6,6 +6,17 @@ bookkeeping apps into interactive visualisations.
 > **Disclaimer:** This tool is for data visualisation only and does not
 > constitute financial advice.
 
+## Try the Demo
+
+You can try FinViz right now without installing anything:
+
+👉 **[finviz.lovable.app](https://finviz.lovable.app)**
+
+The demo is pre-loaded with sample financial data. You can explore all the
+charts, upload your own CSV, delete data, and play around freely — the
+sample data resets automatically every hour, so there's nothing you can
+break.
+
 ## What Is FinViz?
 
 FinViz is a private, self-hosted web app that helps you understand your
@@ -168,8 +179,8 @@ in the app code.
 
 ## Running as a Public Demo
 
-If you want to host a read-only public demo so others can try FinViz
-without risking your data:
+If you want to host a public demo so others can try FinViz with sample
+data:
 
 ### 1. Create a demo user
 
@@ -181,18 +192,7 @@ without risking your data:
 
 Sign in as the demo user and upload your sample CSV.
 
-### 3. Lock the demo account (make it read-only)
-
-```bash
-chmod +x setup/mark-demo-user.sh
-./setup/mark-demo-user.sh demo@example.com
-```
-
-**What this does:** Marks the demo user as read-only at the database level.
-They can view all the charts and data, but cannot upload, edit, or delete
-anything. This protection is enforced server-side and cannot be bypassed.
-
-### 4. Enable demo mode in the app
+### 3. Enable demo mode in the app
 
 Set these environment variables before building:
 
@@ -202,8 +202,19 @@ VITE_DEMO_EMAIL=demo@example.com
 VITE_DEMO_PASSWORD=demopassword
 ```
 
-This shows a "Demo Mode" banner on the login page with pre-filled
-credentials so visitors can sign in with one click.
+This shows an info panel on the login page with pre-filled credentials so
+visitors can sign in with one click.
+
+### 4. (Optional) Auto-reset demo data
+
+The hosted demo at [finviz.lovable.app](https://finviz.lovable.app) uses a
+scheduled background function that checks the demo account's data every
+hour. If a visitor has deleted or modified the sample data, it
+automatically restores it. When the data is untouched, the check is a
+single lightweight query and uses virtually no resources.
+
+For self-hosted demos, you can set up a similar cron job — see
+`supabase/functions/reset-demo-data/` for the implementation.
 
 > **Note:** `VITE_` variables are baked into the JavaScript bundle and
 > visible to anyone who inspects the page. This is fine for demo
@@ -220,9 +231,9 @@ via environment variables:
 | --- | --- | --- |
 | `VITE_CURRENCY_CODE` | `GBP` | ISO 4217 currency code (e.g. `USD`, `EUR`) |
 | `VITE_LOCALE` | `en-GB` | Locale for number/date formatting (e.g. `en-US`, `de-DE`) |
-| `VITE_DEMO_MODE` | `false` | Show demo banner & pre-fill credentials |
-| `VITE_DEMO_EMAIL` | *(empty)* | Email pre-filled in demo mode |
-| `VITE_DEMO_PASSWORD` | *(empty)* | Password pre-filled in demo mode |
+| `VITE_DEMO_MODE` | `true` | Show demo info panel & pre-fill credentials |
+| `VITE_DEMO_EMAIL` | `test@test.com` | Email pre-filled in demo mode |
+| `VITE_DEMO_PASSWORD` | `test1234` | Password pre-filled in demo mode |
 
 ### CSV Column Mapping
 
@@ -335,13 +346,16 @@ src/
 │   └── FinancialReport.tsx  # Printable reports
 ├── pages/
 │   ├── FinancialDashboard.tsx  # Main dashboard
-│   ├── Login.tsx         # Login page
+│   ├── Login.tsx         # Login page with demo info panel
 │   └── Colophon.tsx      # About/tech stack page
 setup/
 ├── schema.sql            # Database schema
 ├── create-user.sh        # User creation script
-├── mark-demo-user.sh     # Mark a user as read-only demo
+├── mark-demo-user.sh     # Mark a user as demo account
 └── nginx.conf            # Production nginx config
+supabase/
+└── functions/
+    └── reset-demo-data/  # Hourly demo data auto-reset
 ```
 
 ## Security
