@@ -29,14 +29,18 @@ responsibly:
 
 ### Demo Mode Protection
 
-When running a public demo, the demo user account is marked as **read-only**
-at the database level:
+When running a public demo, the demo user account has **full write access**
+with automatic data restoration:
 
 - A `demo_users` table tracks which user IDs are demo accounts.
-- RLS policies on `financial_transactions` allow demo users to **view** data
-  but block all **insert, update, and delete** operations.
-- This protection is enforced server-side via a `SECURITY DEFINER` function,
-  so it cannot be bypassed from the client.
+- Demo users can **upload, edit, and delete** data freely — this lets
+  visitors experience the full app without restrictions.
+- A `SECURITY DEFINER` function (`is_demo_user`) identifies demo accounts
+  server-side and cannot be bypassed from the client.
+- An **Edge Function** (`reset-demo-data`) restores the sample dataset
+  automatically. It runs on an **hourly schedule** via `pg_cron` but is
+  smart enough to skip the reset if the data is already intact (saving
+  resources).
 - To mark a user as demo, run `setup/mark-demo-user.sh <email>`.
 
 ### Secrets & Environment Variables
