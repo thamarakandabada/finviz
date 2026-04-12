@@ -3,6 +3,8 @@
 A self-hosted financial dashboard that turns CSV exports from double-entry
 bookkeeping apps into interactive visualisations.
 
+![FinViz Dashboard](public/screenshots/dashboard.png)
+
 > **Disclaimer:** This tool is for data visualisation only and does not
 > constitute financial advice.
 
@@ -11,6 +13,8 @@ bookkeeping apps into interactive visualisations.
 You can try FinViz right now without installing anything:
 
 👉 **[finviz.lovable.app](https://finviz.lovable.app)**
+
+![FinViz Login](public/screenshots/login.png)
 
 The demo is pre-loaded with sample financial data. You can explore all the
 charts, upload your own CSV, delete data, and play around freely — the
