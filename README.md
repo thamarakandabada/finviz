@@ -12,7 +12,7 @@ bookkeeping apps into interactive visualisations.
 
 You can try FinViz right now without installing anything:
 
-👉 **[finviz.lovable.app](https://finviz.lovable.app)**
+👉 **[finviz.thamara.co.uk](https://finviz.thamara.co.uk)**
 
 ![FinViz Login](public/screenshots/login.png)
 
@@ -211,7 +211,7 @@ visitors can sign in with one click.
 
 ### 4. (Optional) Auto-reset demo data
 
-The hosted demo at [finviz.lovable.app](https://finviz.lovable.app) uses a
+The hosted demo at [finviz.thamara.co.uk](https://finviz.thamara.co.uk) uses a
 scheduled background function that checks the demo account's data every
 hour. If a visitor has deleted or modified the sample data, it
 automatically restores it. When the data is untouched, the check is a
