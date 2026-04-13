@@ -34,8 +34,10 @@ app, upload it to FinViz, and it creates charts and summaries showing:
 - **Expense forecasting** — predictions based on your spending patterns
 - **Life runway** — how long your savings would last at current spending
 - **Printable reports** — year-end and rolling summaries
+- **CSV export** — download your transaction data back out as a CSV file
 
 Your data stays on your own server — nothing is shared with third parties.
+Sessions auto-lock after 30 minutes of inactivity for security.
 
 ## ⚠️ Important: Double-Entry Bookkeeping Only
 
