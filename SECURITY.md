@@ -19,6 +19,10 @@ responsibly:
 - Login uses Supabase Auth's `signInWithPassword` directly.
 - **No public signup** — users are created via CLI
   (`setup/create-user.sh`), not self-registration.
+- **Client-side rate limiting** — after 5 failed login attempts, the
+  form locks out for 30 seconds to slow brute-force attacks.
+- **Idle session timeout** — sessions are automatically signed out
+  after 30 minutes of inactivity (mouse, keyboard, touch, scroll).
 
 ### Data Isolation
 
@@ -55,6 +59,9 @@ with automatic data restoration:
 ### Self-Hosting Hardening
 
 - Serve behind **HTTPS** (Caddy, nginx + Let's Encrypt, Cloudflare Tunnel).
+- The included `setup/nginx.conf` sets **Content Security Policy**,
+  `X-Frame-Options: DENY`, `X-Content-Type-Options: nosniff`, and
+  `Referrer-Policy` headers by default.
 - Restrict network access via **VPN**, **Tailscale**, or
   **Cloudflare Access**.
 - Pin Docker image versions and regularly pull security patches.
