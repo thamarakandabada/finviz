@@ -5,7 +5,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   Upload, Trash2, TrendingUp, TrendingDown, DollarSign,
   PieChart, ArrowUpRight, ArrowDownRight, Minus, Calendar, FileText,
-  Database, ChevronDown, ChevronUp, LogOut,
+  Database, ChevronDown, ChevronUp, LogOut, Download,
 } from "lucide-react";
 import FinancialReport from "@/components/FinancialReport";
 import { AppFooter } from "@/components/AppFooter";
