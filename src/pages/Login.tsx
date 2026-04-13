@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -7,14 +7,27 @@ import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { DEMO_MODE, DEMO_EMAIL, DEMO_PASSWORD } from "@/lib/app-config";
 
+const MAX_ATTEMPTS = 5;
+const LOCKOUT_SECONDS = 30;
+
 export function LoginPage() {
   const [email, setEmail] = useState(DEMO_MODE ? DEMO_EMAIL : "");
   const [password, setPassword] = useState(DEMO_MODE ? DEMO_PASSWORD : "");
   const [loading, setLoading] = useState(false);
+  const [lockoutUntil, setLockoutUntil] = useState<number | null>(null);
+  const failCount = useRef(0);
+
+  const isLockedOut = lockoutUntil !== null && Date.now() < lockoutUntil;
+  const lockoutRemaining = isLockedOut ? Math.ceil((lockoutUntil! - Date.now()) / 1000) : 0;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email.trim() || !password.trim()) return;
+
+    if (isLockedOut) {
+      toast.error(`Too many attempts. Try again in ${lockoutRemaining}s`);
+      return;
+    }
 
     setLoading(true);
     try {
@@ -24,7 +37,18 @@ export function LoginPage() {
       });
 
       if (error) {
-        toast.error("Invalid credentials");
+        failCount.current += 1;
+        if (failCount.current >= MAX_ATTEMPTS) {
+          const until = Date.now() + LOCKOUT_SECONDS * 1000;
+          setLockoutUntil(until);
+          failCount.current = 0;
+          setTimeout(() => setLockoutUntil(null), LOCKOUT_SECONDS * 1000);
+          toast.error(`Too many failed attempts. Locked for ${LOCKOUT_SECONDS}s`);
+        } else {
+          toast.error("Invalid credentials");
+        }
+      } else {
+        failCount.current = 0;
       }
     } catch {
       toast.error("Something went wrong");
@@ -108,8 +132,14 @@ export function LoginPage() {
               />
             </div>
           </div>
-          <Button type="submit" className="w-full" disabled={loading}>
-            {loading ? "Signing in…" : DEMO_MODE ? "Try the demo" : "Sign in"}
+          <Button type="submit" className="w-full" disabled={loading || isLockedOut}>
+            {isLockedOut
+              ? `Locked (${lockoutRemaining}s)`
+              : loading
+                ? "Signing in…"
+                : DEMO_MODE
+                  ? "Try the demo"
+                  : "Sign in"}
           </Button>
         </form>
       </div>
