@@ -6,9 +6,10 @@ If you discover a security vulnerability in FinViz, please report it
 responsibly:
 
 1. **Do not** open a public GitHub issue.
-2. Email **[your-email@example.com]** with a description of the issue,
-   steps to reproduce, and any relevant logs or screenshots.
-3. You will receive an acknowledgement within **48 hours**.
+2. Open a [private security advisory](https://github.com/thamarakandabada/finviz/security/advisories/new)
+   on GitHub with a description of the issue, steps to reproduce, and any
+   relevant logs or screenshots.
+3. You will receive an acknowledgement within a reasonable timeframe.
 4. A fix will be developed privately and released as a patch before the
    issue is disclosed publicly.
 
