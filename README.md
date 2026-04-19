@@ -328,6 +328,7 @@ via the CLI script.
 
 - **Frontend:** React 18, TypeScript, Vite, Tailwind CSS, shadcn/ui, Recharts
 - **Backend:** Supabase (Postgres + Auth + REST API)
+- **Testing:** Vitest + Testing Library
 - **Deployment:** Docker Compose or any static host + Supabase
 
 ## Development
@@ -348,8 +349,10 @@ src/
 │   └── csv-parser.ts    # CSV parsing & account classification
 ├── components/
 │   ├── AppFooter.tsx     # Shared footer with GitHub & colophon links
-│   ├── AuthProvider.tsx  # Auth context
+│   ├── AuthProvider.tsx  # Auth context (with idle-timeout auto-logout)
 │   └── FinancialReport.tsx  # Printable reports
+├── hooks/
+│   └── useIdleTimeout.ts # 30-minute inactivity auto-logout hook
 ├── pages/
 │   ├── FinancialDashboard.tsx  # Main dashboard
 │   ├── Login.tsx         # Login page with demo info panel
